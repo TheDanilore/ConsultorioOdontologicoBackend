@@ -20,6 +20,11 @@ public class RolService {
     }
 
     public Rol guardar(Rol rol) {
+        if (rolRepository.findByDescripcion(rol.getDescripcion()) != null) {
+            throw new DAOException("El rol ya existe");
+        }
+        
+        rol.setEstado(EstadoEnum.Activo); // Estado por defecto
         return rolRepository.save(rol);
     }
 
@@ -28,12 +33,12 @@ public class RolService {
                 .orElseThrow(() -> new DAOException("Rol no encontrado"));
 
         // Actualizar solo los campos permitidos
-        rolExistente.setDescripcion(rolExistente.getDescripcion());
+        rolExistente.setDescripcion(rolActualizado.getDescripcion());
         return rolRepository.save(rolExistente);
     }
 
     public Rol buscarPorId(int id) {
-        return rolRepository.findById(id).orElse(null);
+        return rolRepository.findById(id).orElseThrow(() -> new DAOException("Rol no encontrado"));
     }
 
     public Rol cambiarEstado(int id, EstadoEnum nuevoEstado) {
@@ -42,9 +47,10 @@ public class RolService {
         return rolRepository.save(rol);
     }
 
-    
-
     public void eliminarPorId(int id) {
+        if (!rolRepository.existsById(id)) {
+            throw new DAOException("Rol no encontrado");
+        }
         rolRepository.deleteById(id);
     }
 

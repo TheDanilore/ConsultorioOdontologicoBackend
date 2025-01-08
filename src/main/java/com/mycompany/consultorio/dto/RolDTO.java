@@ -3,10 +3,8 @@ package com.mycompany.consultorio.dto;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
-import com.mycompany.consultorio.model.usuario.Usuario;
 
 public class RolDTO {
     private int id;

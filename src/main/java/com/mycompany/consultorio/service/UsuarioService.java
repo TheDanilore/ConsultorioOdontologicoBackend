@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,19 +22,19 @@ public class UsuarioService {
         // Cargar usuario por email y roles
         Usuario usuario = usuarioRepository.findByEmailWithRoles(email)
                 .orElseThrow(() -> new DAOException("Usuario no encontrado o inactivo."));
-    
+
         if (usuario.getEstado() != EstadoEnum.Activo) {
             throw new DAOException("Usuario no está activo.");
         }
-    
+
         if (!BCrypt.checkpw(password, usuario.getPassword())) {
             throw new DAOException("Contraseña incorrecta.");
         }
-    
-        // Los roles ya deberían estar cargados aquí si la consulta funciona correctamente.
+
+        // Los roles ya deberían estar cargados aquí si la consulta funciona
+        // correctamente.
         return usuario;
     }
-    
 
     // Listar todos los usuarios
     public List<Usuario> listarTodos() {
@@ -48,6 +49,11 @@ public class UsuarioService {
 
         if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
             throw new DAOException("La contraseña es obligatoria.");
+        }
+
+        // Verifica si los roles son nulos o vacíos y los inicializa
+        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+            usuario.setRoles(new HashSet<>());
         }
 
         // Encriptar la contraseña
@@ -67,7 +73,8 @@ public class UsuarioService {
         if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().isEmpty()) {
             usuarioExistente.setPassword(BCrypt.hashpw(usuarioActualizado.getPassword(), BCrypt.gensalt()));
         }
-
+        usuarioExistente.setRoles(usuarioActualizado.getRoles() != null ? usuarioActualizado.getRoles() : new HashSet<>());
+    
         return usuarioRepository.save(usuarioExistente);
     }
 

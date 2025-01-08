@@ -16,11 +16,11 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    
     private String descripcion;
 
     @Enumerated(EnumType.STRING)
-    private EstadoEnum estado;
+    private EstadoEnum estado = EstadoEnum.Activo;;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @JsonIgnore // Ignora la serialización de esta relación

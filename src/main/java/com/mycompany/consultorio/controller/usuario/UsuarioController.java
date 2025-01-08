@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired; // Importa la cla
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Importa las clases para la anotación de los métodos
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,13 +21,6 @@ public class UsuarioController {
     @Autowired // Inyección de dependencias
     private UsuarioService usuarioService; // Servicio para la entidad Usuario
     private RolService rolService; // Servicio para la entidad Usuario
-
-
-    @GetMapping("/roles")
-    public ResponseEntity<List<Rol>> listarRoles() {
-        List<Rol> roles = rolService.listarTodos(); // Asegúrate de que tengas un servicio para listar roles.
-        return ResponseEntity.ok(roles);
-    }
 
     // Listar todos los usuarios
     @GetMapping
@@ -48,6 +42,11 @@ public class UsuarioController {
     @PostMapping
     public UsuarioDTO guardar(@RequestBody UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioDTO.toEntity(); // Convertir UsuarioDTO a Usuario
+        // Si no se envían roles, asignar una lista vacía
+        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+            usuario.setRoles(new HashSet<>());
+        }
+
         Usuario usuarioGuardado = usuarioService.guardar(usuario);
         return UsuarioDTO.fromEntity(usuarioGuardado); // Convertir Usuario a UsuarioDTO
     }
@@ -56,6 +55,11 @@ public class UsuarioController {
     @PutMapping("/editar/{id}")
     public UsuarioDTO editar(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         Usuario usuario = usuarioDTO.toEntity(); // Convertir UsuarioDTO a Usuario
+        // Manejar el caso de roles nulos o vacíos
+        if (usuario.getRoles() == null || usuario.getRoles().isEmpty()) {
+            usuario.setRoles(new HashSet<>());
+        }
+
         Usuario usuarioEditado = usuarioService.editar(id, usuario);
         return UsuarioDTO.fromEntity(usuarioEditado); // Convertir Usuario a UsuarioDTO
     }

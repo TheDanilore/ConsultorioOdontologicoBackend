@@ -11,9 +11,7 @@ public class Permiso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String descripcion;
-
     private String accion;
 
     @ManyToMany(mappedBy = "permisos")

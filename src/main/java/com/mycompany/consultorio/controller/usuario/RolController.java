@@ -8,7 +8,6 @@ import com.mycompany.consultorio.model.usuario.Usuario;
 import com.mycompany.consultorio.service.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,18 +32,24 @@ public class RolController {
     }
 
     @PostMapping
-    public Rol guardar(@RequestBody Rol rol) {
-        return rolService.guardar(rol);
+    public RolDTO guardar(@RequestBody RolDTO rolDTO) {
+        Rol rol = rolDTO.toEntity(); // Convertir RolDTO a Rol
+        Rol rolGuardado = rolService.guardar(rol);
+        return RolDTO.fromEntity(rolGuardado); // Convertir Rol a RolDTO
     }
 
+    // Editar un usuario existente
     @PutMapping("/editar/{id}")
-    public Rol editar(@PathVariable int id, @RequestBody Rol rol) {
-        return rolService.editar(id, rol);
+    public RolDTO editar(@PathVariable int id, @RequestBody RolDTO rolDTO) {
+        Rol rol = rolDTO.toEntity(); // Convertir RolDTO a Rol
+        Rol rolEditado = rolService.editar(id, rol);
+        return RolDTO.fromEntity(rolEditado); // Convertir Rol a RolDTO
     }
 
     @PatchMapping("/cambiar-estado/{id}")
-    public Rol cambiarEstado(@PathVariable int id, @RequestParam EstadoEnum nuevoEstado) {
-        return rolService.cambiarEstado(id, nuevoEstado);
+    public RolDTO cambiarEstado(@PathVariable int id, @RequestParam EstadoEnum nuevoEstado) {
+        Rol rol = rolService.cambiarEstado(id, nuevoEstado);
+        return RolDTO.fromEntity(rol); // Convertir Rol a RolDTO
     }
 
     @DeleteMapping("/{id}")
@@ -52,8 +57,9 @@ public class RolController {
         rolService.eliminarPorId(id);
     }
 
-    @GetMapping("/buscar")
-    public Rol buscarPorDescripcion(@RequestParam String descripcion) {
-        return rolService.buscarPorDescripcion(descripcion);
+    @GetMapping("/buscar-descripcion")
+    public RolDTO buscarPorDescripcion(@RequestParam String descripcion) {
+        return RolDTO.fromEntity(rolService.buscarPorDescripcion(descripcion));
     }
+
 }
