@@ -1,8 +1,8 @@
 package com.mycompany.consultorio.dto;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Usuario;
 
@@ -10,13 +10,15 @@ public class UsuarioDTO {
     private Long id;
     private String nombre;
     private String email;
+    private String password; // Incluye la contraseña encriptada
     private EstadoEnum estado;
     private List<RolDTO> roles; // Cambiar a Set<RolDTO> si prefieres conjuntos
 
-    public UsuarioDTO(Long id, String nombre, String email, EstadoEnum estado, List<RolDTO> roles) {
+    public UsuarioDTO(Long id, String nombre, String email, String password, EstadoEnum estado, List<RolDTO> roles) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
+        this.password = password;
         this.estado = estado;
         this.roles = roles;
     }
@@ -70,10 +72,11 @@ public class UsuarioDTO {
         dto.setId(usuario.getId());
         dto.setNombre(usuario.getNombre());
         dto.setEmail(usuario.getEmail());
-        dto.setEstado(usuario.getEstado());
+        dto.setPassword(usuario.getPassword()); // Incluye la contraseña encriptada
         dto.setRoles(usuario.getRoles().stream()
                 .map(RolDTO::fromEntity)
                 .collect(Collectors.toList()));
+        dto.setEstado(usuario.getEstado());
         return dto;
     }
 
@@ -82,19 +85,25 @@ public class UsuarioDTO {
         Usuario usuario = new Usuario();
         usuario.setId(this.id);
         usuario.setNombre(this.nombre);
+        usuario.setPassword(this.password);
         usuario.setEmail(this.email);
         usuario.setEstado(this.estado);
+
+        usuario.setRoles(this.roles != null
+                ? this.roles.stream()
+                        .map(RolDTO::toEntity) // Ahora válido porque implementaste `toEntity` en RolDTO
+                        .collect(Collectors.toSet()) // Cambiar a toSet si es necesario
+                : new HashSet<>());
+
         return usuario;
     }
 
-    public List<String> getPermisos() {
-        return roles.stream()
-                .filter(rol -> rol.getPermisos() != null) // Filtrar roles que no tengan permisos nulos
-                .flatMap(rol -> rol.getPermisos().stream()) // Convertir cada lista de permisos en un stream
-                .map(PermisoDTO::getDescripcion) // Obtener la descripción de cada permiso
-                .distinct() // Eliminar duplicados
-                .collect(Collectors.toList()); // Convertir a una lista
+    public String getPassword() {
+        return password;
     }
-    
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }

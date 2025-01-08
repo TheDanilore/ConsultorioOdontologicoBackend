@@ -2,9 +2,11 @@ package com.mycompany.consultorio.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
+import com.mycompany.consultorio.model.usuario.Usuario;
 
 public class RolDTO {
     private int id;
@@ -12,21 +14,13 @@ public class RolDTO {
     private EstadoEnum estado;
     private List<PermisoDTO> permisos; // Verifica que esta lista esté poblada
 
+    public RolDTO() {}
 
     public RolDTO(int id, String descripcion, EstadoEnum estado, List<PermisoDTO> permisos) {
         this.id = id;
         this.descripcion = descripcion;
         this.estado = estado;
         this.permisos = permisos;
-    }
-
-    public RolDTO(int id, String descripcion, EstadoEnum estado) {
-        this.id = id;
-        this.descripcion = descripcion;
-        this.estado = estado;
-    }
-
-    public RolDTO() {
     }
 
     public int getId() {
@@ -55,18 +49,36 @@ public class RolDTO {
 
     public List<PermisoDTO> getPermisos() {
         return permisos != null ? permisos : new ArrayList<>();
-    }    
+    }
 
     public void setPermisos(List<PermisoDTO> permisos) {
         this.permisos = permisos;
     }
 
-
+    // Convertir Rol a RolDTO
     public static RolDTO fromEntity(Rol rol) {
-        return new RolDTO(rol.getId(), rol.getDescripcion(), rol.getEstado());
+        RolDTO dto = new RolDTO();
+        dto.setId(rol.getId());
+        dto.setDescripcion(rol.getDescripcion());
+        dto.setEstado(rol.getEstado());
+        dto.setPermisos(rol.getPermisos().stream()
+                .map(PermisoDTO::fromEntity)
+                .collect(Collectors.toList()));
+        return dto;
     }
 
-
+    public Rol toEntity() {
+        Rol rol = new Rol();
+        rol.setId(this.id);
+        rol.setDescripcion(this.descripcion);
+        rol.setEstado(this.estado);
+        rol.setPermisos(this.permisos != null
+                ? this.permisos.stream()
+                        .map(PermisoDTO::toEntity) 
+                        .collect(Collectors.toList())
+                : new ArrayList<>());
+        return rol;
+    }
     
 
 }
