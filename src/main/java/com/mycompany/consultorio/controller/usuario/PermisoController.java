@@ -2,7 +2,6 @@ package com.mycompany.consultorio.controller.usuario;
 
 import com.mycompany.consultorio.dto.PermisoDTO;
 import com.mycompany.consultorio.model.usuario.Permiso;
-import com.mycompany.consultorio.model.usuario.Rol;
 import com.mycompany.consultorio.service.PermisoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +51,7 @@ public class PermisoController {
 
     @GetMapping("/buscar-descripcion")
     public PermisoDTO buscarPorDescripcion(@RequestParam String descripcion) {
-        return PermisoDTO.fromEntity(permisoService.buscarPorDescripcion(descripcion));
+        Permiso permiso = permisoService.buscarPorDescripcion(descripcion);
+        return PermisoDTO.fromEntity(permiso);
     }
 }

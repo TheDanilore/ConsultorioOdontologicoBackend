@@ -1,7 +1,6 @@
 package com.mycompany.consultorio.dto;
 
 import java.util.Objects;
-
 import com.mycompany.consultorio.model.usuario.Permiso;
 
 public class PermisoDTO {

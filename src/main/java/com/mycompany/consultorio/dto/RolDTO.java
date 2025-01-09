@@ -1,6 +1,7 @@
 package com.mycompany.consultorio.dto;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.mycompany.consultorio.model.EstadoEnum;
@@ -73,8 +74,8 @@ public class RolDTO {
         rol.setPermisos(this.permisos != null
                 ? this.permisos.stream()
                         .map(PermisoDTO::toEntity) 
-                        .collect(Collectors.toList())
-                : new ArrayList<>());
+                        .collect(Collectors.toSet())
+                : new HashSet<>());
         return rol;
     }
     

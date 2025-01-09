@@ -31,13 +31,13 @@ public class PermisoService {
                 .orElseThrow(() -> new DAOException("Rol no encontrado"));
 
         // Actualizar solo los campos permitidos
-        permisoExistente.setDescripcion(permisoExistente.getDescripcion());
-        permisoExistente.setAccion(permisoExistente.getAccion());
+        permisoExistente.setDescripcion(permisoActualizado.getDescripcion());
+        permisoExistente.setAccion(permisoActualizado.getAccion());
         return permisoRepository.save(permisoExistente);
     }
 
     public Permiso buscarPorId(int id) {
-        return permisoRepository.findById(id).orElse(null);
+        return permisoRepository.findById(id).orElseThrow(() -> new DAOException("Rol no encontrado"));
     }
 
     public void eliminarPorId(int id) {

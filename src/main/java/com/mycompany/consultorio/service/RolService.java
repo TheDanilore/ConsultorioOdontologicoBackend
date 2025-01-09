@@ -7,6 +7,7 @@ import com.mycompany.consultorio.repository.RolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -24,6 +25,11 @@ public class RolService {
             throw new DAOException("El rol ya existe");
         }
         
+        // Verifica si los roles son nulos o vacíos y los inicializa
+        if (rol.getPermisos() == null || rol.getPermisos().isEmpty()) {
+            rol.setPermisos(new HashSet<>());
+        }
+
         rol.setEstado(EstadoEnum.Activo); // Estado por defecto
         return rolRepository.save(rol);
     }
@@ -34,6 +40,9 @@ public class RolService {
 
         // Actualizar solo los campos permitidos
         rolExistente.setDescripcion(rolActualizado.getDescripcion());
+
+        rolExistente.setPermisos(rolActualizado.getPermisos() != null ? rolActualizado.getPermisos() : new HashSet<>());
+
         return rolRepository.save(rolExistente);
     }
 

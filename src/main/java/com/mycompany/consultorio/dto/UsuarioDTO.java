@@ -73,10 +73,10 @@ public class UsuarioDTO {
         dto.setNombre(usuario.getNombre());
         dto.setEmail(usuario.getEmail());
         dto.setPassword(usuario.getPassword()); // Incluye la contraseña encriptada
+        dto.setEstado(usuario.getEstado());
         dto.setRoles(usuario.getRoles().stream()
                 .map(RolDTO::fromEntity)
                 .collect(Collectors.toList()));
-        dto.setEstado(usuario.getEstado());
         return dto;
     }
 

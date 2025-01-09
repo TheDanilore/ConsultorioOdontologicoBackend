@@ -1,11 +1,8 @@
 package com.mycompany.consultorio.model.usuario;
 
 import jakarta.persistence.*;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mycompany.consultorio.model.EstadoEnum;
 
@@ -33,9 +30,9 @@ public class Rol {
         joinColumns = @JoinColumn(name = "idRol"),
         inverseJoinColumns = @JoinColumn(name = "idPermiso")
     )
-    private List<Permiso> permisos;
+    private Set<Permiso> permisos  = new HashSet<>();
 
-    public Rol(int id, String descripcion, EstadoEnum estado, Set<Usuario> usuarios, List<Permiso> permisos) {
+    public Rol(int id, String descripcion, EstadoEnum estado, Set<Usuario> usuarios, Set<Permiso> permisos) {
         this.id = id;
         this.descripcion = descripcion;
         this.estado = estado;
@@ -78,11 +75,11 @@ public class Rol {
         this.usuarios = usuarios;
     }
 
-    public List<Permiso> getPermisos() {
+    public Set<Permiso> getPermisos() {
         return permisos;
     }
 
-    public void setPermisos(List<Permiso> permisos) {
+    public void setPermisos(Set<Permiso> permisos) {
         this.permisos = permisos;
     }    
     
