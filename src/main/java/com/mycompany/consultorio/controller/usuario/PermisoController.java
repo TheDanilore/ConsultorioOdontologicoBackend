@@ -1,11 +1,14 @@
 package com.mycompany.consultorio.controller.usuario;
 
+import com.mycompany.consultorio.dto.PermisoDTO;
 import com.mycompany.consultorio.model.usuario.Permiso;
+import com.mycompany.consultorio.model.usuario.Rol;
 import com.mycompany.consultorio.service.PermisoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/permisos")
@@ -15,23 +18,31 @@ public class PermisoController {
     private PermisoService permisoService;
 
     @GetMapping
-    public List<Permiso> listarTodos() {
-        return permisoService.listarTodos();
+    public List<PermisoDTO> listarTodos() {
+        return permisoService.listarTodos().stream()
+                .map(PermisoDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Permiso buscarPorId(@PathVariable int id) {
-        return permisoService.buscarPorId(id);
+    public PermisoDTO buscarPorId(@PathVariable int id) {
+        Permiso permiso = permisoService.buscarPorId(id);
+        return PermisoDTO.fromEntity(permiso);
     }
 
     @PostMapping
-    public Permiso guardar(@RequestBody Permiso permiso) {
-        return permisoService.guardar(permiso);
+    public PermisoDTO guardar(@RequestBody PermisoDTO permisoDTO) {
+        Permiso permiso = permisoDTO.toEntity();
+        Permiso permisoGuardado = permisoService.guardar(permiso);
+        return PermisoDTO.fromEntity(permisoGuardado);
     }
 
     @PutMapping("/editar/{id}")
-    public Permiso editar(@PathVariable int id, @RequestBody Permiso permiso) {
-        return permisoService.editar(id, permiso);
+    public PermisoDTO editar(@PathVariable int id, @RequestBody PermisoDTO permisoDTO) {
+        Permiso permiso = permisoDTO.toEntity();
+        
+        Permiso permisoEditado = permisoService.editar(id, permiso);
+        return PermisoDTO.fromEntity(permisoEditado);
     }
 
     @DeleteMapping("/{id}")
@@ -39,8 +50,8 @@ public class PermisoController {
         permisoService.eliminarPorId(id);
     }
 
-    @GetMapping("/buscar")
-    public Permiso buscarPorDescripcion(@RequestParam String descripcion) {
-        return permisoService.buscarPorDescripcion(descripcion);
+    @GetMapping("/buscar-descripcion")
+    public PermisoDTO buscarPorDescripcion(@RequestParam String descripcion) {
+        return PermisoDTO.fromEntity(permisoService.buscarPorDescripcion(descripcion));
     }
 }

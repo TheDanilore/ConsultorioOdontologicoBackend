@@ -1,6 +1,10 @@
 package com.mycompany.consultorio.model.usuario;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 
@@ -15,9 +19,10 @@ public class Permiso {
     private String accion;
 
     @ManyToMany(mappedBy = "permisos")
-    private List<Rol> roles;
+    @JsonIgnore // Ignora la serialización de esta relación
+    private Set<Rol> roles = new HashSet<>();
 
-    public Permiso(int id, String descripcion, String accion, List<Rol> roles) {
+    public Permiso(int id, String descripcion, String accion, Set<Rol> roles) {
         this.id = id;
         this.descripcion = descripcion;
         this.accion = accion;
@@ -52,11 +57,11 @@ public class Permiso {
         this.accion = accion;
     }
 
-    public List<Rol> getRoles() {
+    public Set<Rol> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Rol> roles) {
+    public void setRoles(Set<Rol> roles) {
         this.roles = roles;
     }
 }

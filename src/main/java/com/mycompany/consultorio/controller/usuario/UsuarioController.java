@@ -2,12 +2,9 @@ package com.mycompany.consultorio.controller.usuario;
 
 import com.mycompany.consultorio.dto.UsuarioDTO;
 import com.mycompany.consultorio.model.EstadoEnum;
-import com.mycompany.consultorio.model.usuario.Rol;
 import com.mycompany.consultorio.model.usuario.Usuario;
-import com.mycompany.consultorio.service.RolService;
 import com.mycompany.consultorio.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired; // Importa la clase Autowired
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Importa las clases para la anotación de los métodos
 
 import java.util.HashSet;
@@ -20,7 +17,6 @@ public class UsuarioController {
 
     @Autowired // Inyección de dependencias
     private UsuarioService usuarioService; // Servicio para la entidad Usuario
-    private RolService rolService; // Servicio para la entidad Usuario
 
     // Listar todos los usuarios
     @GetMapping

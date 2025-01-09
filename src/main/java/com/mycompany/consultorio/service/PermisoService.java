@@ -19,6 +19,10 @@ public class PermisoService {
     }
 
     public Permiso guardar(Permiso permiso) {
+        if (permisoRepository.findByDescripcion(permiso.getDescripcion()) != null) {
+            throw new DAOException("El permiso ya existe");
+        }
+        
         return permisoRepository.save(permiso);
     }
 
@@ -37,6 +41,9 @@ public class PermisoService {
     }
 
     public void eliminarPorId(int id) {
+        if(!permisoRepository.existsById(id)) {
+            throw new DAOException("Permiso no encontrado");
+        }
         permisoRepository.deleteById(id);
     }
 
