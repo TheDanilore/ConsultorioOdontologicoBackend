@@ -3,7 +3,8 @@ package com.mycompany.consultorio.controller.usuario;
 import com.mycompany.consultorio.dto.usuario.RolDTO;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
-import com.mycompany.consultorio.service.RolService;
+import com.mycompany.consultorio.service.usuario.RolService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

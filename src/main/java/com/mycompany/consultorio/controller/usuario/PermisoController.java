@@ -2,7 +2,8 @@ package com.mycompany.consultorio.controller.usuario;
 
 import com.mycompany.consultorio.dto.usuario.PermisoDTO;
 import com.mycompany.consultorio.model.usuario.Permiso;
-import com.mycompany.consultorio.service.PermisoService;
+import com.mycompany.consultorio.service.usuario.PermisoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

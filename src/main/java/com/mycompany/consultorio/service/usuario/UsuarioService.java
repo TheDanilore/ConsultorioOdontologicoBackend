@@ -1,4 +1,4 @@
-package com.mycompany.consultorio.service;
+package com.mycompany.consultorio.service.usuario;
 
 import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.EstadoEnum;

@@ -26,6 +26,38 @@ public class UsuarioDTO {
     public UsuarioDTO() {
     }
 
+    // Convertir Usuario a UsuarioDTO
+    public static UsuarioDTO fromEntity(Usuario usuario) {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setId(usuario.getId());
+        dto.setNombre(usuario.getNombre());
+        dto.setEmail(usuario.getEmail());
+        dto.setPassword(usuario.getPassword()); // Incluye la contraseña encriptada
+        dto.setEstado(usuario.getEstado());
+        dto.setRoles(usuario.getRoles().stream()
+                .map(RolDTO::fromEntity)
+                .collect(Collectors.toList()));
+        return dto;
+    }
+
+    // Convertir UsuarioDTO a Usuario
+    public Usuario toEntity() {
+        Usuario usuario = new Usuario();
+        usuario.setId(this.id);
+        usuario.setNombre(this.nombre);
+        usuario.setPassword(this.password);
+        usuario.setEmail(this.email);
+        usuario.setEstado(this.estado);
+
+        usuario.setRoles(this.roles != null
+                ? this.roles.stream()
+                        .map(RolDTO::toEntity) // Ahora válido porque implementaste `toEntity` en RolDTO
+                        .collect(Collectors.toSet()) // Cambiar a toSet si es necesario
+                : new HashSet<>());
+
+        return usuario;
+    }
+
     public Long getId() {
         return id;
     }
@@ -64,38 +96,6 @@ public class UsuarioDTO {
 
     public void setRoles(List<RolDTO> roles) {
         this.roles = roles;
-    }
-
-    // Convertir Usuario a UsuarioDTO
-    public static UsuarioDTO fromEntity(Usuario usuario) {
-        UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
-        dto.setNombre(usuario.getNombre());
-        dto.setEmail(usuario.getEmail());
-        dto.setPassword(usuario.getPassword()); // Incluye la contraseña encriptada
-        dto.setEstado(usuario.getEstado());
-        dto.setRoles(usuario.getRoles().stream()
-                .map(RolDTO::fromEntity)
-                .collect(Collectors.toList()));
-        return dto;
-    }
-
-    // Convertir UsuarioDTO a Usuario
-    public Usuario toEntity() {
-        Usuario usuario = new Usuario();
-        usuario.setId(this.id);
-        usuario.setNombre(this.nombre);
-        usuario.setPassword(this.password);
-        usuario.setEmail(this.email);
-        usuario.setEstado(this.estado);
-
-        usuario.setRoles(this.roles != null
-                ? this.roles.stream()
-                        .map(RolDTO::toEntity) // Ahora válido porque implementaste `toEntity` en RolDTO
-                        .collect(Collectors.toSet()) // Cambiar a toSet si es necesario
-                : new HashSet<>());
-
-        return usuario;
     }
 
     public String getPassword() {

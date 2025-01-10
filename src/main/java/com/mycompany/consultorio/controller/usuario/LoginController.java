@@ -2,7 +2,8 @@ package com.mycompany.consultorio.controller.usuario;
 
 import com.mycompany.consultorio.dto.usuario.UsuarioDTO;
 import com.mycompany.consultorio.model.usuario.Usuario;
-import com.mycompany.consultorio.service.UsuarioService;
+import com.mycompany.consultorio.service.usuario.UsuarioService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
