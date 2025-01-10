@@ -1,57 +1,35 @@
-package com.mycompany.consultorio.model;
+package com.mycompany.consultorio.dto;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "persona")
-public class Persona {
+import com.mycompany.consultorio.model.GeneroEnum;
+import com.mycompany.consultorio.model.Persona;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class PersonaDTO {
     private Long id;
-
     private String nombres;
     private String apellidos;
     private String direccion;
     private String telefono;
-
-    @ManyToOne
-    @JoinColumn(name = "tipodocumentoidentidad_id", referencedColumnName = "id")
-    private TipoDocumentoIdentidad tipoDocumentoIdentidad;
-
-    @Column(name = "numero_documento")
+    private TipoDocumentoIdentidadDTO tipoDocumentoIdentidad;
     private String numeroDocumento;
-
-    @Column(name = "departamento_id")
     private int idDepartamento;
-
-    @Column(name = "provincia_id")
     private int idProvincia;
-
-    @Column(name = "distrito_id")
     private int idDistrito;
-
     private String correo;
-
-    @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
-
-    @Enumerated(EnumType.STRING)
     private GeneroEnum genero;
-
-    @Column(name = "lugar_nacimiento")
     private String lugarNacimiento;
-
     private LocalDateTime created_at;
-
     private LocalDateTime updated_at;
 
-    public Persona(Long id, String nombres, String apellidos, String direccion, String telefono,
-            TipoDocumentoIdentidad tipoDocumentoIdentidad, String numeroDocumento, int idDepartamento, int idProvincia,
-            int idDistrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero, String lugarNacimiento,
-            LocalDateTime created_at, LocalDateTime updated_at) {
+    
+
+    public PersonaDTO(Long id, String nombres, String apellidos, String direccion, String telefono,
+            TipoDocumentoIdentidadDTO tipoDocumentoIdentidad, String numeroDocumento, int idDepartamento,
+            int idProvincia, int idDistrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero,
+            String lugarNacimiento, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -70,8 +48,61 @@ public class Persona {
         this.updated_at = updated_at;
     }
 
-    public Persona() {
+    public PersonaDTO() {
     }
+
+    public static PersonaDTO fromEntity(Persona persona) {
+        PersonaDTO dto = new PersonaDTO();
+        dto.setId(persona.getId());
+        dto.setNombres(persona.getNombres());
+        dto.setApellidos(persona.getApellidos());
+        dto.setDireccion(persona.getDireccion());
+        dto.setTelefono(persona.getTelefono());
+    
+        // Convertir TipoDocumentoIdentidad a DTO
+        if (persona.getTipoDocumentoIdentidad() != null) {
+            dto.setTipoDocumentoIdentidad(TipoDocumentoIdentidadDTO.fromEntity(persona.getTipoDocumentoIdentidad()));
+        }
+    
+        dto.setNumeroDocumento(persona.getNumeroDocumento());
+        dto.setIdDepartamento(persona.getIdDepartamento());
+        dto.setIdProvincia(persona.getIdProvincia());
+        dto.setIdDistrito(persona.getIdDistrito());
+        dto.setCorreo(persona.getCorreo());
+        dto.setFechaNacimiento(persona.getFechaNacimiento());
+        dto.setGenero(persona.getGenero());
+        dto.setLugarNacimiento(persona.getLugarNacimiento());
+        dto.setCreated_at(persona.getCreated_at());
+        dto.setUpdated_at(persona.getUpdated_at());
+        return dto;
+    }
+    
+    public Persona toEntity() {
+        Persona persona = new Persona();
+        persona.setId(this.id);
+        persona.setNombres(this.nombres);
+        persona.setApellidos(this.apellidos);
+        persona.setDireccion(this.direccion);
+        persona.setTelefono(this.telefono);
+    
+        // Convertir DTO de TipoDocumentoIdentidad a entidad
+        if (this.tipoDocumentoIdentidad != null) {
+            persona.setTipoDocumentoIdentidad(this.tipoDocumentoIdentidad.toEntity());
+        }
+    
+        persona.setNumeroDocumento(this.numeroDocumento);
+        persona.setIdDepartamento(this.idDepartamento);
+        persona.setIdProvincia(this.idProvincia);
+        persona.setIdDistrito(this.idDistrito);
+        persona.setCorreo(this.correo);
+        persona.setFechaNacimiento(this.fechaNacimiento);
+        persona.setGenero(this.genero);
+        persona.setLugarNacimiento(this.lugarNacimiento);
+        persona.setCreated_at(this.created_at);
+        persona.setUpdated_at(this.updated_at);
+        return persona;
+    }
+    
 
     public Long getId() {
         return id;
@@ -113,11 +144,11 @@ public class Persona {
         this.telefono = telefono;
     }
 
-    public TipoDocumentoIdentidad getTipoDocumentoIdentidad() {
+    public TipoDocumentoIdentidadDTO getTipoDocumentoIdentidad() {
         return tipoDocumentoIdentidad;
     }
 
-    public void setTipoDocumentoIdentidad(TipoDocumentoIdentidad tipoDocumentoIdentidad) {
+    public void setTipoDocumentoIdentidad(TipoDocumentoIdentidadDTO tipoDocumentoIdentidad) {
         this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
     }
 
@@ -200,7 +231,5 @@ public class Persona {
     public void setUpdated_at(LocalDateTime updated_at) {
         this.updated_at = updated_at;
     }
-
-    
 
 }

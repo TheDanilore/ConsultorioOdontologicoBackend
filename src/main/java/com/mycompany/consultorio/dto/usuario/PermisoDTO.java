@@ -1,4 +1,4 @@
-package com.mycompany.consultorio.dto;
+package com.mycompany.consultorio.dto.usuario;
 
 import java.util.Objects;
 import com.mycompany.consultorio.model.usuario.Permiso;

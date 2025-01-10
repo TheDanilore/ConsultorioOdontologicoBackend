@@ -1,11 +1,12 @@
 package com.mycompany.consultorio.controller;
 
+import com.mycompany.consultorio.dto.PersonaDTO;
 import com.mycompany.consultorio.model.Persona;
 import com.mycompany.consultorio.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController // Indica que esta clase es un controlador REST
 @RequestMapping("/api/personas") // Indica la URL base para todos los métodos
@@ -14,64 +15,97 @@ public class PersonaController { // Clase controlador para la entidad Persona
     @Autowired // Inyección de dependencias
     private PersonaService personaService; // Servicio para la entidad Persona
 
-    @GetMapping // Indica que este método responde a una petición GET
-    public List<Persona> listarTodas() { // Método para listar todas las personas
-        return personaService.listarTodas(); // Retorna la lista de personas
+    @GetMapping
+    public List<PersonaDTO> listarTodas() { // Método para listar todas las personas
+        return personaService.listarTodas().stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas
     }
 
-    @GetMapping("/{id}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public Persona buscarPorId(@PathVariable int id) { // Método para buscar una persona por su ID
-        return personaService.buscarPorId(id); // Retorna la persona encontrada
+    @GetMapping("/{id}")
+    public PersonaDTO buscarPorId(@PathVariable Long id) { // Método para buscar una persona por su ID
+        Persona persona = personaService.buscarPorId(id); // Busca la persona por su ID
+        return PersonaDTO.fromEntity(persona); // Retorna la persona encontrada
     }
 
-    @PostMapping // Indica que este método responde a una petición POST
-    public Persona guardar(@RequestBody Persona persona) {  // Método para guardar una persona
-        return personaService.guardar(persona); // Retorna la persona guardada
+    @PostMapping
+    public PersonaDTO guardar(@RequestBody PersonaDTO personaDTO) { // Método para guardar una persona
+        Persona persona = personaDTO.toEntity();
+        Persona personaGuardada = personaService.guardar(persona); // Guarda la persona
+        return PersonaDTO.fromEntity(personaGuardada); // Retorna la persona guardada
     }
 
-    @DeleteMapping("/{id}") // Indica que este método responde a una petición DELETE con un parámetro en la URL
-    public void eliminarPorId(@PathVariable int id) {  // Método para eliminar una persona por su ID
+    @PutMapping("/editar/{id}")
+    public PersonaDTO editar(@PathVariable Long id, @RequestBody PersonaDTO personaDTO) {
+        Persona persona = personaDTO.toEntity(); // Convertir UsuarioDTO a Usuario
+        Persona personaEditada = personaService.editar(id, persona);
+        return PersonaDTO.fromEntity(personaEditada); // Convertir Usuario a UsuarioDTO
+    }
+
+    @DeleteMapping("/{id}")
+    public void eliminarPorId(@PathVariable Long id) { // Método para eliminar una persona por su ID
         personaService.eliminarPorId(id); // Elimina la persona por su ID
     }
 
+    @GetMapping("/idtipodocumento/{idTipoDocumento}")
+    public PersonaDTO BuscarPorIdConTipoDocumento(@PathVariable Long idTipoDocumento) { // Método para buscar personas por su ID de tipo de documento
+        Persona persona = personaService.BuscarPorIdConTipoDocumento(idTipoDocumento);
+        return PersonaDTO.fromEntity(persona); // Retorna la persona encontrada
+    }
+
     // Métodos personalizados
-    @GetMapping("/correo/{correo}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public Persona buscarPorCorreo(@PathVariable String correo) { // Método para buscar una persona por su correo
-        return personaService.buscarPorCorreo(correo); // Retorna la persona encontrada
+    @GetMapping("/correo/{correo}") 
+    public PersonaDTO buscarPorCorreo(@PathVariable String correo) { // Método para buscar una persona por su correo
+        Persona persona = personaService.buscarPorCorreo(correo); // Busca la persona por su correo
+        return PersonaDTO.fromEntity(persona); // Retorna la persona encontrada
     }
 
-    @GetMapping("/nombres/{nombres}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public List<Persona> buscarPorNombres(@PathVariable String nombres) { // Método para buscar personas por su nombre
-        return personaService.buscarPorNombres(nombres); // Retorna la lista de personas encontradas
-    }
-    
-    @GetMapping("/apellidos/{apellidos}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public List<Persona> buscarPorApellidos(@PathVariable String apellidos) { // Método para buscar personas por su apellido
-        return personaService.buscarPorApellidos(apellidos); // Retorna la lista de personas encontradas
+    @GetMapping("/nombres/{nombres}") 
+    public List<PersonaDTO> buscarPorNombres(@PathVariable String nombres) { // Método para buscar personas por su nombre
+        return personaService.buscarPorNombres(nombres).stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
-    @GetMapping("/nombres/{nombres}/apellidos/{apellidos}") // Indica que este método responde a una petición GET con dos parámetros en la URL
-    public List<Persona> buscarPorNombresYApellidos(@PathVariable String nombres, @PathVariable String apellidos) { // Método para buscar personas por su nombre y apellido
-        return personaService.buscarPorNombresYApellidos(nombres, apellidos); // Retorna la lista de personas encontradas
+    @GetMapping("/apellidos/{apellidos}")
+    public List<PersonaDTO> buscarPorApellidos(@PathVariable String apellidos) { // Método para buscar personas por su
+        return personaService.buscarPorApellidos(apellidos).stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
-    @GetMapping("/nombres/fragmento/{fragmento}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public List<Persona> buscarPorFragmentoDeNombres(@PathVariable String fragmento) { // Método para buscar personas por un fragmento de su nombre
-        return personaService.buscarPorFragmentoDeNombres(fragmento); // Retorna la lista de personas encontradas
+    @GetMapping("/nombres/{nombres}/apellidos/{apellidos}")
+    public List<PersonaDTO> buscarPorNombresYApellidos(@PathVariable String nombres, @PathVariable String apellidos) { // Método para buscar personas por su nombre y apellido
+        return personaService.buscarPorNombresYApellidos(nombres, apellidos).stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
-    @GetMapping("/apellidos/fragmento/{fragmento}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public List<Persona> buscarPorFragmentoDeApellidos(@PathVariable String fragmento) { // Método para buscar personas por un fragmento de su apellido
-        return personaService.buscarPorFragmentoDeApellidos(fragmento); // Retorna la lista de personas encontradas
+    @GetMapping("/nombres/fragmento/{fragmento}")
+    public List<PersonaDTO> buscarPorFragmentoDeNombres(@PathVariable String fragmento) { // Método para buscar personas
+        return personaService.buscarPorFragmentoDeNombres(fragmento).stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
-    @GetMapping("/ordenadas/nombres") // Indica que este método responde a una petición GET
-    public List<Persona> listarOrdenadasPorNombres() { // Método para listar todas las personas ordenadas por nombre
-        return personaService.listarOrdenadasPorNombres(); // Retorna la lista de personas ordenadas por nombre
+    @GetMapping("/apellidos/fragmento/{fragmento}")
+    public List<PersonaDTO> buscarPorFragmentoDeApellidos(@PathVariable String fragmento) { // Método para buscar personas
+        return personaService.buscarPorFragmentoDeApellidos(fragmento).stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
-    @GetMapping("/ordenadas/apellidos") // Indica que este método responde a una petición GET
-    public List<Persona> listarOrdenadasPorApellidos() { // Método para listar todas las personas ordenadas por apellido
-        return personaService.listarOrdenadasPorApellidos(); // Retorna la lista de personas ordenadas por apellido
+    @GetMapping("/ordenadas/nombres")
+    public List<PersonaDTO> listarOrdenadasPorNombres() { // Método para listar todas las personas ordenadas por nombre
+        return personaService.listarOrdenadasPorNombres().stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas ordenadas por nombre
+    }
+
+    @GetMapping("/ordenadas/apellidos")
+    public List<PersonaDTO> listarOrdenadasPorApellidos() { // Método para listar todas las personas ordenadas por apellido
+        return personaService.listarOrdenadasPorApellidos().stream()
+                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
+                .collect(Collectors.toList()); // Retorna la lista de personas ordenadas por apellido
     }
 }

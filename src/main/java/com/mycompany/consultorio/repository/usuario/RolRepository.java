@@ -1,4 +1,4 @@
-package com.mycompany.consultorio.repository;
+package com.mycompany.consultorio.repository.usuario;
 
 import java.util.List;
 

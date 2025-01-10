@@ -1,4 +1,4 @@
-package com.mycompany.consultorio.dto;
+package com.mycompany.consultorio.dto.usuario;
 
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -3,7 +3,8 @@ package com.mycompany.consultorio.service;
 import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
-import com.mycompany.consultorio.repository.RolRepository;
+import com.mycompany.consultorio.repository.usuario.RolRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

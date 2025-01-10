@@ -2,7 +2,8 @@ package com.mycompany.consultorio.service;
 
 import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.usuario.Permiso;
-import com.mycompany.consultorio.repository.PermisoRepository;
+import com.mycompany.consultorio.repository.usuario.PermisoRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
