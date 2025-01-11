@@ -14,9 +14,9 @@ public class PersonaDTO {
     private String telefono;
     private TipoDocumentoIdentidadDTO tipoDocumentoIdentidad;
     private String numeroDocumento;
-    private int idDepartamento;
-    private int idProvincia;
-    private int idDistrito;
+    private DepartamentoDTO departamento;
+    private ProvinciaDTO provincia;
+    private DistritoDTO distrito;
     private String correo;
     private LocalDate fechaNacimiento;
     private GeneroEnum genero;
@@ -27,8 +27,8 @@ public class PersonaDTO {
     
 
     public PersonaDTO(Long id, String nombres, String apellidos, String direccion, String telefono,
-            TipoDocumentoIdentidadDTO tipoDocumentoIdentidad, String numeroDocumento, int idDepartamento,
-            int idProvincia, int idDistrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero,
+            TipoDocumentoIdentidadDTO tipoDocumentoIdentidad, String numeroDocumento, DepartamentoDTO departamento,
+            ProvinciaDTO provincia, DistritoDTO distrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero,
             String lugarNacimiento, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
         this.nombres = nombres;
@@ -37,9 +37,9 @@ public class PersonaDTO {
         this.telefono = telefono;
         this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
         this.numeroDocumento = numeroDocumento;
-        this.idDepartamento = idDepartamento;
-        this.idProvincia = idProvincia;
-        this.idDistrito = idDistrito;
+        this.departamento = departamento;
+        this.provincia = provincia;
+        this.distrito = distrito;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
@@ -65,9 +65,18 @@ public class PersonaDTO {
         }
     
         dto.setNumeroDocumento(persona.getNumeroDocumento());
-        dto.setIdDepartamento(persona.getIdDepartamento());
-        dto.setIdProvincia(persona.getIdProvincia());
-        dto.setIdDistrito(persona.getIdDistrito());
+
+        if(persona.getDepartamento() != null){
+            dto.setDepartamento(DepartamentoDTO.fromEntity(persona.getDepartamento()));
+        }
+
+        if(persona.getProvincia() != null){
+            dto.setProvincia(ProvinciaDTO.fromEntity(persona.getProvincia()));
+        }
+
+        if(persona.getDistrito() != null){
+            dto.setDistrito(DistritoDTO.fromEntity(persona.getDistrito()));
+        }
         dto.setCorreo(persona.getCorreo());
         dto.setFechaNacimiento(persona.getFechaNacimiento());
         dto.setGenero(persona.getGenero());
@@ -91,9 +100,18 @@ public class PersonaDTO {
         }
     
         persona.setNumeroDocumento(this.numeroDocumento);
-        persona.setIdDepartamento(this.idDepartamento);
-        persona.setIdProvincia(this.idProvincia);
-        persona.setIdDistrito(this.idDistrito);
+
+        if(this.departamento != null){
+            persona.setDepartamento(this.departamento.toEntity());
+        }
+
+        if(this.provincia != null){
+            persona.setProvincia(this.provincia.toEntity());
+        }
+
+        if(this.distrito != null){
+            persona.setDistrito(this.distrito.toEntity());
+        }
         persona.setCorreo(this.correo);
         persona.setFechaNacimiento(this.fechaNacimiento);
         persona.setGenero(this.genero);
@@ -102,7 +120,6 @@ public class PersonaDTO {
         persona.setUpdated_at(this.updated_at);
         return persona;
     }
-    
 
     public Long getId() {
         return id;
@@ -160,28 +177,28 @@ public class PersonaDTO {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public int getIdDepartamento() {
-        return idDepartamento;
+    public DepartamentoDTO getDepartamento() {
+        return departamento;
     }
 
-    public void setIdDepartamento(int idDepartamento) {
-        this.idDepartamento = idDepartamento;
+    public void setDepartamento(DepartamentoDTO departamento) {
+        this.departamento = departamento;
     }
 
-    public int getIdProvincia() {
-        return idProvincia;
+    public ProvinciaDTO getProvincia() {
+        return provincia;
     }
 
-    public void setIdProvincia(int idProvincia) {
-        this.idProvincia = idProvincia;
+    public void setProvincia(ProvinciaDTO provincia) {
+        this.provincia = provincia;
     }
 
-    public int getIdDistrito() {
-        return idDistrito;
+    public DistritoDTO getDistrito() {
+        return distrito;
     }
 
-    public void setIdDistrito(int idDistrito) {
-        this.idDistrito = idDistrito;
+    public void setDistrito(DistritoDTO distrito) {
+        this.distrito = distrito;
     }
 
     public String getCorreo() {
@@ -231,5 +248,7 @@ public class PersonaDTO {
     public void setUpdated_at(LocalDateTime updated_at) {
         this.updated_at = updated_at;
     }
+    
 
+    
 }

@@ -4,13 +4,12 @@ import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Usuario;
 import com.mycompany.consultorio.repository.usuario.UsuarioRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 public class UsuarioService {
@@ -38,8 +37,8 @@ public class UsuarioService {
     }
 
     // Listar todos los usuarios
-    public List<Usuario> listarTodos() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> listarTodos(Pageable pageable) {
+        return usuarioRepository.findAll(pageable);
     }
 
     // Guardar un nuevo usuario
@@ -74,8 +73,9 @@ public class UsuarioService {
         if (usuarioActualizado.getPassword() != null && !usuarioActualizado.getPassword().isEmpty()) {
             usuarioExistente.setPassword(BCrypt.hashpw(usuarioActualizado.getPassword(), BCrypt.gensalt()));
         }
-        usuarioExistente.setRoles(usuarioActualizado.getRoles() != null ? usuarioActualizado.getRoles() : new HashSet<>());
-    
+        usuarioExistente
+                .setRoles(usuarioActualizado.getRoles() != null ? usuarioActualizado.getRoles() : new HashSet<>());
+
         return usuarioRepository.save(usuarioExistente);
     }
 
@@ -106,5 +106,13 @@ public class UsuarioService {
     public Usuario buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new DAOException("Usuario no encontrado"));
+    }
+
+    // Listar usuario por nombre, email o ID
+    public Page<Usuario> buscarPorCriterio(String criterio, Pageable pageable) {
+        if (criterio == null || criterio.isBlank()) {
+            throw new IllegalArgumentException("El criterio de búsqueda no puede estar vacío");
+        }
+        return usuarioRepository.buscarPorCriterio(criterio, pageable);
     }
 }

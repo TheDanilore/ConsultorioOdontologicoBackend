@@ -12,7 +12,7 @@ public class Paciente { // Clase para la entidad Paciente
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Generación automática de la clave primaria
     private Long id; // Atributo para el ID del paciente
 
-    @OneToOne(cascade = CascadeType.ALL) // Relación uno a uno con la entidad Persona
+    @OneToOne // Relación uno a uno con la entidad Persona
     @JoinColumn(name = "persona_id", referencedColumnName = "id") 
     private Persona persona; // Atributo para la persona del paciente
 

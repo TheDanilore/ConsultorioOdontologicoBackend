@@ -3,12 +3,11 @@ package com.mycompany.consultorio.controller.usuario;
 import com.mycompany.consultorio.dto.usuario.PermisoDTO;
 import com.mycompany.consultorio.model.usuario.Permiso;
 import com.mycompany.consultorio.service.usuario.PermisoService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/permisos")
@@ -18,10 +17,10 @@ public class PermisoController {
     private PermisoService permisoService;
 
     @GetMapping
-    public List<PermisoDTO> listarTodos() {
-        return permisoService.listarTodos().stream()
-                .map(PermisoDTO::fromEntity)
-                .collect(Collectors.toList());
+    public Page<PermisoDTO> listarTodos(@RequestParam(defaultValue = "0") int page,
+    @RequestParam(defaultValue = "10") int size) { 
+        Pageable pageable = PageRequest.of(page, size);
+        return permisoService.listarTodos(pageable).map(PermisoDTO::fromEntity);
     }
 
     @GetMapping("/{id}")

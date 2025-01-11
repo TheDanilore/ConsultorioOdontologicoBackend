@@ -3,11 +3,10 @@ package com.mycompany.consultorio.service.usuario;
 import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.usuario.Permiso;
 import com.mycompany.consultorio.repository.usuario.PermisoRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PermisoService {
@@ -15,8 +14,8 @@ public class PermisoService {
     @Autowired
     private PermisoRepository permisoRepository;
 
-    public List<Permiso> listarTodos() {
-        return permisoRepository.findAll();
+    public Page<Permiso> listarTodos(Pageable pageable) {
+        return permisoRepository.findAll(pageable);
     }
 
     public Permiso guardar(Permiso permiso) {

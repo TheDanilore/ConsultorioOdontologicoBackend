@@ -4,13 +4,12 @@ import com.mycompany.consultorio.dto.usuario.RolDTO;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
 import com.mycompany.consultorio.service.usuario.RolService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/roles")
@@ -20,10 +19,10 @@ public class RolController {
     private RolService rolService;
 
     @GetMapping
-    public List<RolDTO> listarTodos() {
-        return rolService.listarTodos().stream()
-                .map(RolDTO::fromEntity)
-                .collect(Collectors.toList());
+    public Page<RolDTO> listarTodos(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return rolService.listarTodos(pageable).map(RolDTO::fromEntity);
     }
 
     @GetMapping("/{id}")

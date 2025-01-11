@@ -50,9 +50,9 @@ public class PersonaService {
         personaExistente.setTelefono(personaActualizada.getTelefono());
         personaExistente.setTipoDocumentoIdentidad(personaActualizada.getTipoDocumentoIdentidad());
         personaExistente.setNumeroDocumento(personaActualizada.getNumeroDocumento());
-        personaExistente.setIdDepartamento(personaActualizada.getIdDepartamento());
-        personaExistente.setIdProvincia(personaActualizada.getIdProvincia());
-        personaExistente.setIdDistrito(personaActualizada.getIdDistrito());
+        personaExistente.setDepartamento(personaActualizada.getDepartamento());
+        personaExistente.setProvincia(personaActualizada.getProvincia());
+        personaExistente.setDistrito(personaActualizada.getDistrito());
         personaExistente.setCorreo(personaActualizada.getCorreo());
         personaExistente.setFechaNacimiento(personaActualizada.getFechaNacimiento());
         personaExistente.setGenero(personaActualizada.getGenero());

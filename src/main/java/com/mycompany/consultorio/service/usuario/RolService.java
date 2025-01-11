@@ -4,12 +4,11 @@ import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Rol;
 import com.mycompany.consultorio.repository.usuario.RolRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.HashSet;
-import java.util.List;
 
 @Service
 public class RolService {
@@ -17,8 +16,8 @@ public class RolService {
     @Autowired
     private RolRepository rolRepository;
 
-    public List<Rol> listarTodos() {
-        return rolRepository.findAll();
+    public Page<Rol> listarTodos(Pageable pageable) {
+        return rolRepository.findAll(pageable);
     }
 
     public Rol guardar(Rol rol) {

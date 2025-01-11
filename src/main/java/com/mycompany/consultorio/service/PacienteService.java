@@ -100,4 +100,11 @@ public class PacienteService {
                 persona.getTelefono());
     }
 
+    public Optional<Persona> validarPersonaExistente(Persona persona) {
+        return personaRepository.findByCorreoOrNumeroDocumentoOrTelefono(
+                persona.getCorreo(),
+                persona.getNumeroDocumento(),
+                persona.getTelefono());
+    }
+
 }

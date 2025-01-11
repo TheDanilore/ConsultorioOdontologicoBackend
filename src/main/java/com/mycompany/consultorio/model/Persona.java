@@ -24,14 +24,17 @@ public class Persona {
     @Column(name = "numero_documento")
     private String numeroDocumento;
 
-    @Column(name = "departamento_id")
-    private int idDepartamento;
+    @ManyToOne
+    @JoinColumn(name = "departamento_id", referencedColumnName = "id_departamento")
+    private Departamento departamento;
 
-    @Column(name = "provincia_id")
-    private int idProvincia;
+    @ManyToOne
+    @JoinColumn(name = "provincia_id", referencedColumnName = "id_provincia")
+    private Provincia provincia;
 
-    @Column(name = "distrito_id")
-    private int idDistrito;
+    @ManyToOne
+    @JoinColumn(name = "distrito_id", referencedColumnName = "id_distrito")
+    private Distrito distrito;
 
     private String correo;
 
@@ -49,9 +52,9 @@ public class Persona {
     private LocalDateTime updated_at;
 
     public Persona(Long id, String nombres, String apellidos, String direccion, String telefono,
-            TipoDocumentoIdentidad tipoDocumentoIdentidad, String numeroDocumento, int idDepartamento, int idProvincia,
-            int idDistrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero, String lugarNacimiento,
-            LocalDateTime created_at, LocalDateTime updated_at) {
+            TipoDocumentoIdentidad tipoDocumentoIdentidad, String numeroDocumento, Departamento departamento,
+            Provincia provincia, Distrito distrito, String correo, LocalDate fechaNacimiento, GeneroEnum genero,
+            String lugarNacimiento, LocalDateTime created_at, LocalDateTime updated_at) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -59,9 +62,9 @@ public class Persona {
         this.telefono = telefono;
         this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
         this.numeroDocumento = numeroDocumento;
-        this.idDepartamento = idDepartamento;
-        this.idProvincia = idProvincia;
-        this.idDistrito = idDistrito;
+        this.departamento = departamento;
+        this.provincia = provincia;
+        this.distrito = distrito;
         this.correo = correo;
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
@@ -129,28 +132,28 @@ public class Persona {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public int getIdDepartamento() {
-        return idDepartamento;
+    public Departamento getDepartamento() {
+        return departamento;
     }
 
-    public void setIdDepartamento(int idDepartamento) {
-        this.idDepartamento = idDepartamento;
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
     }
 
-    public int getIdProvincia() {
-        return idProvincia;
+    public Provincia getProvincia() {
+        return provincia;
     }
 
-    public void setIdProvincia(int idProvincia) {
-        this.idProvincia = idProvincia;
+    public void setProvincia(Provincia provincia) {
+        this.provincia = provincia;
     }
 
-    public int getIdDistrito() {
-        return idDistrito;
+    public Distrito getDistrito() {
+        return distrito;
     }
 
-    public void setIdDistrito(int idDistrito) {
-        this.idDistrito = idDistrito;
+    public void setDistrito(Distrito distrito) {
+        this.distrito = distrito;
     }
 
     public String getCorreo() {
@@ -201,6 +204,7 @@ public class Persona {
         this.updated_at = updated_at;
     }
 
+    
     
 
 }

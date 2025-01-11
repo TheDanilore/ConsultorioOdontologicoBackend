@@ -2,7 +2,11 @@ package com.mycompany.consultorio.controller;
 
 import com.mycompany.consultorio.dto.PacienteDTO;
 import com.mycompany.consultorio.model.Paciente;
+import com.mycompany.consultorio.model.Persona;
 import com.mycompany.consultorio.service.PacienteService;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,10 +37,10 @@ public class PacienteController {
     }
 
     @PostMapping
-    public ResponseEntity<PacienteDTO> guardar(@RequestBody PacienteDTO pacienteDTO) { 
+    public ResponseEntity<PacienteDTO> guardar(@RequestBody PacienteDTO pacienteDTO) {
         Paciente paciente = pacienteDTO.toEntity();
         Paciente pacienteGuardado = pacienteService.guardar(paciente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(PacienteDTO.fromEntity(pacienteGuardado)); 
+        return ResponseEntity.status(HttpStatus.CREATED).body(PacienteDTO.fromEntity(pacienteGuardado));
     }
 
     @PutMapping("/editar/{id}")
@@ -59,4 +63,17 @@ public class PacienteController {
         }
         return ResponseEntity.ok("La persona no está registrada como paciente.");
     }
+
+    @PostMapping("/validar-persona")
+    public ResponseEntity<?> validarPersona(@RequestBody PacienteDTO pacienteDTO) {
+        Persona persona = pacienteDTO.toEntity().getPersona();
+        Optional<Persona> personaExistente = pacienteService.validarPersonaExistente(persona);
+
+        if (personaExistente.isPresent()) {
+            return ResponseEntity.ok(personaExistente.get());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("No se encontró una persona con los datos proporcionados.");
+    }
+
 }

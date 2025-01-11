@@ -4,13 +4,14 @@ import com.mycompany.consultorio.dto.usuario.UsuarioDTO;
 import com.mycompany.consultorio.model.EstadoEnum;
 import com.mycompany.consultorio.model.usuario.Usuario;
 import com.mycompany.consultorio.service.usuario.UsuarioService;
-
 import org.springframework.beans.factory.annotation.Autowired; // Importa la clase Autowired
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*; // Importa las clases para la anotación de los métodos
-
 import java.util.HashSet;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController // Indica que esta clase es un controlador REST
 @RequestMapping("/api/usuarios")
@@ -21,11 +22,10 @@ public class UsuarioController {
 
     // Listar todos los usuarios
     @GetMapping
-    public List<UsuarioDTO> listarTodos() {
-        return usuarioService.listarTodos()
-                .stream()
-                .map(UsuarioDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
-                .collect(Collectors.toList());
+    public Page<UsuarioDTO> listarTodos(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return usuarioService.listarTodos(pageable).map(UsuarioDTO::fromEntity);
     }
 
     // Buscar un usuario por ID
@@ -79,5 +79,16 @@ public class UsuarioController {
     public UsuarioDTO buscarPorEmail(@RequestParam String email) {
         Usuario usuario = usuarioService.buscarPorEmail(email);
         return UsuarioDTO.fromEntity(usuario); // Convertir Usuario a UsuarioDTO
+    }
+
+    // Listar usarios por nombres o email o id
+    @GetMapping("/buscar")
+    public ResponseEntity<Page<Usuario>> buscarPorCriterio(
+            @RequestParam String criterio,
+            @RequestParam int page,
+            @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+        Page<Usuario> usuarios = usuarioService.buscarPorCriterio(criterio, pageable);
+        return ResponseEntity.ok(usuarios);
     }
 }
