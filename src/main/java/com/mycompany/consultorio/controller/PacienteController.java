@@ -1,6 +1,7 @@
 package com.mycompany.consultorio.controller;
 
 import com.mycompany.consultorio.dto.PacienteDTO;
+import com.mycompany.consultorio.dto.PersonaDTO;
 import com.mycompany.consultorio.model.Paciente;
 import com.mycompany.consultorio.model.Persona;
 import com.mycompany.consultorio.service.PacienteService;
@@ -70,7 +71,8 @@ public class PacienteController {
         Optional<Persona> personaExistente = pacienteService.validarPersonaExistente(persona);
 
         if (personaExistente.isPresent()) {
-            return ResponseEntity.ok(personaExistente.get());
+            PersonaDTO personaDTO = PersonaDTO.fromEntity(personaExistente.get());
+            return ResponseEntity.ok(personaDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("No se encontró una persona con los datos proporcionados.");

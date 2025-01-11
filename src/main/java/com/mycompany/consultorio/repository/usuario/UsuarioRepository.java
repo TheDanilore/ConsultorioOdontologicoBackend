@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByNombreOrEmailOrId(String nombre, String email, Long id);
 
-    @Query("SELECT u FROM Usuario u WHERE " +
+    @Query("SELECT DISTINCT u FROM Usuario u LEFT JOIN FETCH u.roles WHERE " +
             "LOWER(u.nombre) LIKE LOWER(CONCAT('%', :criterio, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :criterio, '%')) OR " +
             "CAST(u.id AS string) LIKE :criterio")

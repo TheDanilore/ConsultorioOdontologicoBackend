@@ -83,12 +83,15 @@ public class UsuarioController {
 
     // Listar usarios por nombres o email o id
     @GetMapping("/buscar")
-    public ResponseEntity<Page<Usuario>> buscarPorCriterio(
+    public ResponseEntity<Page<UsuarioDTO>> buscarPorCriterio(
             @RequestParam String criterio,
-            @RequestParam int page,
-            @RequestParam int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
         Page<Usuario> usuarios = usuarioService.buscarPorCriterio(criterio, pageable);
-        return ResponseEntity.ok(usuarios);
+        // Convertir a UsuarioDTO
+        Page<UsuarioDTO> usuariosDTO = usuarios.map(UsuarioDTO::fromEntity);
+        return ResponseEntity.ok(usuariosDTO);
     }
+
 }

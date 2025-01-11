@@ -101,10 +101,16 @@ public class PacienteService {
     }
 
     public Optional<Persona> validarPersonaExistente(Persona persona) {
-        return personaRepository.findByCorreoOrNumeroDocumentoOrTelefono(
+        System.out.println("Buscando por: Correo=" + persona.getCorreo() + ", Documento=" + persona.getNumeroDocumento() + ", Teléfono=" + persona.getTelefono());
+        Optional<Persona> resultado = personaRepository.findByCorreoOrNumeroDocumentoOrTelefono(
                 persona.getCorreo(),
                 persona.getNumeroDocumento(),
                 persona.getTelefono());
+    
+        System.out.println("Resultado: " + resultado.orElse(null));
+        return resultado;
     }
+    
+    
 
 }
