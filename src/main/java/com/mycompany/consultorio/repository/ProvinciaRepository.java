@@ -11,6 +11,7 @@ import com.mycompany.consultorio.model.Provincia;
 
 @Repository
 public interface ProvinciaRepository extends JpaRepository<Provincia, Integer> {
+    //Busca las provincias por el id del departamento
     Page<Provincia> findByDepartamentoIdDepartamento(Integer id, Pageable pageable);
 
     Optional<Provincia> findByDescripcion(String descripcion);

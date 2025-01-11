@@ -1,36 +1,52 @@
-package com.mycompany.consultorio.controller; // Paquete del controlador
+package com.mycompany.consultorio.controller;
 
-import com.mycompany.consultorio.model.Paciente; // Importa la clase Paciente
-import com.mycompany.consultorio.service.PacienteService; // Importa la clase PacienteService
-import org.springframework.beans.factory.annotation.Autowired; // Importa la clase Autowired
-import org.springframework.web.bind.annotation.*; // Importa las clases RestController, RequestMapping, GetMapping, PostMapping, DeleteMapping
+import com.mycompany.consultorio.dto.PacienteDTO;
+import com.mycompany.consultorio.model.Paciente;
+import com.mycompany.consultorio.service.PacienteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List; 
+@RestController
+@RequestMapping("/api/pacientes")
+public class PacienteController {
 
-@RestController // Indica que esta clase es un controlador REST
-@RequestMapping("/api/pacientes") // Indica la URL base para todos los métodos
-public class PacienteController { // Clase controlador para la entidad Paciente
+    @Autowired 
+    private PacienteService pacienteService;
 
-    @Autowired // Inyección de dependencias
-    private PacienteService pacienteService; // Servicio para la entidad Paciente
-
-    @GetMapping // Indica que este método responde a una petición GET
-    public List<Paciente> listarTodos() { // Método para listar todos los pacientes
-        return pacienteService.listarTodos(); // Retorna la lista de pacientes
+    @GetMapping
+    public Page<PacienteDTO> listarTodos(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return pacienteService.listarTodos(pageable).map(PacienteDTO::fromEntity);
     }
 
     @GetMapping("/{id}") // Indica que este método responde a una petición GET con un parámetro en la URL
-    public Paciente buscarPorId(@PathVariable int id) { // Método para buscar un paciente por su ID
-        return pacienteService.buscarPorId(id); // Retorna el paciente encontrado
+    public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Long id) { // Método para buscar un paciente por su ID
+        Paciente paciente = pacienteService.buscarPorId(id); 
+        return ResponseEntity.ok(PacienteDTO.fromEntity(paciente)); // Retorna el paciente encontrado
     }
 
-    @PostMapping // Indica que este método responde a una petición POST
-    public Paciente guardar(@RequestBody Paciente paciente) { // Método para guardar un paciente
-        return pacienteService.guardar(paciente); // Retorna el paciente guardado
+    @PostMapping 
+    public ResponseEntity<PacienteDTO> guardar(@RequestBody PacienteDTO pacienteDTO) { // Método para guardar un paciente
+        Paciente paciente = pacienteDTO.toEntity();
+        Paciente pacienteGuardado = pacienteService.guardar(paciente); 
+        return ResponseEntity.status(HttpStatus.CREATED).body(PacienteDTO.fromEntity(pacienteGuardado)); // Retorna el paciente guardado
     }
 
-    @DeleteMapping("/{id}") // Indica que este método responde a una petición DELETE con un parámetro en la URL
-    public void eliminarPorId(@PathVariable int id) { // Método para eliminar un paciente por su ID
+    @PutMapping("/editar/{id}")
+    public PacienteDTO editar(@PathVariable Long id, @RequestBody PacienteDTO pacienteDTO) {
+        Paciente paciente = pacienteDTO.toEntity(); 
+        Paciente pacienteEditado = pacienteService.editar(id, paciente);
+        return PacienteDTO.fromEntity(pacienteEditado); 
+    }
+
+    @DeleteMapping("/{id}") 
+    public void eliminarPorId(@PathVariable Long id) { // Método para eliminar un paciente por su ID
         pacienteService.eliminarPorId(id); // Elimina el paciente por su ID
     }
 }

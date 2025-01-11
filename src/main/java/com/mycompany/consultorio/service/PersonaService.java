@@ -4,6 +4,8 @@ import com.mycompany.consultorio.exception.DAOException;
 import com.mycompany.consultorio.model.Persona;
 import com.mycompany.consultorio.repository.PersonaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +18,17 @@ public class PersonaService {
     @Autowired
     private PersonaRepository personaRepository;
 
-    public List<Persona> listarTodas() {
-        return personaRepository.findAll();
+    public Page<Persona> listarTodas(Pageable pageable) {
+        return personaRepository.findAll(pageable);
     }
 
     public Persona guardar(Persona persona) {
         if (personaRepository.findByCorreo(persona.getCorreo()).isPresent()) {
-            throw new RuntimeException("El correo ya está registrado.");
+            throw new DAOException("El correo ya está registrado.");
         }
         if (personaRepository.findByTelefono(persona.getTelefono()).isPresent()) {
-            throw new RuntimeException("La persona ya está registrada.");
-            
+            throw new DAOException("La persona ya está registrada.");
+
         }
 
         persona.setCreated_at(LocalDateTime.now()); // Fecha y hora actual de creación
@@ -55,7 +57,8 @@ public class PersonaService {
     }
 
     public Persona buscarPorId(Long id) {
-        return personaRepository.findById(id).orElseThrow(() -> new DAOException("Persona no encontrado"));
+        return personaRepository.findById(id)
+                .orElseThrow(() -> new DAOException("La Persona con ID: " + id + " no existe"));
     }
 
     public void eliminarPorId(Long id) {

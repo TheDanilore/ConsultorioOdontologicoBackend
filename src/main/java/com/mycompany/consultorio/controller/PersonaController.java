@@ -1,10 +1,12 @@
 package com.mycompany.consultorio.controller;
 
 import com.mycompany.consultorio.dto.PersonaDTO;
-import com.mycompany.consultorio.exception.ResourceNotFoundException;
 import com.mycompany.consultorio.model.Persona;
 import com.mycompany.consultorio.service.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,18 +21,15 @@ public class PersonaController { // Clase controlador para la entidad Persona
     private PersonaService personaService; // Servicio para la entidad Persona
 
     @GetMapping
-    public List<PersonaDTO> listarTodas() { // Método para listar todas las personas
-        return personaService.listarTodas().stream()
-                .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
-                .collect(Collectors.toList()); // Retorna la lista de personas
+    public Page<PersonaDTO> listarTodas(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "20") int size) { 
+        Pageable pageable = PageRequest.of(page, size);
+        return personaService.listarTodas(pageable).map(PersonaDTO::fromEntity);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PersonaDTO> buscarPorId(@PathVariable Long id) { // Método para buscar una persona por su ID
         Persona persona = personaService.buscarPorId(id);
-        if (persona == null) {
-            throw new ResourceNotFoundException("La persona con ID " + id + " no existe.");
-        }
         return ResponseEntity.ok(PersonaDTO.fromEntity(persona)); // Retorna la persona encontrada
     }
 
@@ -54,9 +53,7 @@ public class PersonaController { // Clase controlador para la entidad Persona
     }
 
     @GetMapping("/idtipodocumento/{idTipoDocumento}")
-    public PersonaDTO BuscarPorIdConTipoDocumento(@PathVariable Long idTipoDocumento) { // Método para buscar personas
-                                                                                        // por su ID de tipo de
-                                                                                        // documento
+    public PersonaDTO BuscarPorIdConTipoDocumento(@PathVariable Long idTipoDocumento) { 
         Persona persona = personaService.BuscarPorIdConTipoDocumento(idTipoDocumento);
         return PersonaDTO.fromEntity(persona); // Retorna la persona encontrada
     }
@@ -69,8 +66,7 @@ public class PersonaController { // Clase controlador para la entidad Persona
     }
 
     @GetMapping("/nombres/{nombres}")
-    public List<PersonaDTO> buscarPorNombres(@PathVariable String nombres) { // Método para buscar personas por su
-                                                                             // nombre
+    public List<PersonaDTO> buscarPorNombres(@PathVariable String nombres) {
         return personaService.buscarPorNombres(nombres).stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas encontradas
@@ -84,45 +80,35 @@ public class PersonaController { // Clase controlador para la entidad Persona
     }
 
     @GetMapping("/nombres/{nombres}/apellidos/{apellidos}")
-    public List<PersonaDTO> buscarPorNombresYApellidos(@PathVariable String nombres, @PathVariable String apellidos) { // Método
-                                                                                                                       // para
-                                                                                                                       // buscar
-                                                                                                                       // personas
-                                                                                                                       // por
-                                                                                                                       // su
-                                                                                                                       // nombre
-                                                                                                                       // y
-                                                                                                                       // apellido
+    public List<PersonaDTO> buscarPorNombresYApellidos(@PathVariable String nombres, @PathVariable String apellidos) { 
         return personaService.buscarPorNombresYApellidos(nombres, apellidos).stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
     @GetMapping("/nombres/fragmento/{fragmento}")
-    public List<PersonaDTO> buscarPorFragmentoDeNombres(@PathVariable String fragmento) { // Método para buscar personas
+    public List<PersonaDTO> buscarPorFragmentoDeNombres(@PathVariable String fragmento) { 
         return personaService.buscarPorFragmentoDeNombres(fragmento).stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
     @GetMapping("/apellidos/fragmento/{fragmento}")
-    public List<PersonaDTO> buscarPorFragmentoDeApellidos(@PathVariable String fragmento) { // Método para buscar
-                                                                                            // personas
+    public List<PersonaDTO> buscarPorFragmentoDeApellidos(@PathVariable String fragmento) { 
         return personaService.buscarPorFragmentoDeApellidos(fragmento).stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas encontradas
     }
 
     @GetMapping("/ordenadas/nombres")
-    public List<PersonaDTO> listarOrdenadasPorNombres() { // Método para listar todas las personas ordenadas por nombre
+    public List<PersonaDTO> listarOrdenadasPorNombres() { 
         return personaService.listarOrdenadasPorNombres().stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas ordenadas por nombre
     }
 
     @GetMapping("/ordenadas/apellidos")
-    public List<PersonaDTO> listarOrdenadasPorApellidos() { // Método para listar todas las personas ordenadas por
-                                                            // apellido
+    public List<PersonaDTO> listarOrdenadasPorApellidos() {
         return personaService.listarOrdenadasPorApellidos().stream()
                 .map(PersonaDTO::fromEntity) // Convertir cada Usuario a UsuarioDTO
                 .collect(Collectors.toList()); // Retorna la lista de personas ordenadas por apellido
