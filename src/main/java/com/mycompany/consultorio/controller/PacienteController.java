@@ -15,38 +15,48 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/pacientes")
 public class PacienteController {
 
-    @Autowired 
+    @Autowired
     private PacienteService pacienteService;
 
     @GetMapping
-    public Page<PacienteDTO> listarTodos(@RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "20") int size) {
+    public ResponseEntity<Page<PacienteDTO>> listarTodos(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return pacienteService.listarTodos(pageable).map(PacienteDTO::fromEntity);
+        Page<PacienteDTO> pacientes = pacienteService.listarTodos(pageable).map(PacienteDTO::fromEntity);
+        return ResponseEntity.ok(pacientes);
     }
 
     @GetMapping("/{id}") // Indica que este método responde a una petición GET con un parámetro en la URL
     public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Long id) { // Método para buscar un paciente por su ID
-        Paciente paciente = pacienteService.buscarPorId(id); 
+        Paciente paciente = pacienteService.buscarPorId(id);
         return ResponseEntity.ok(PacienteDTO.fromEntity(paciente)); // Retorna el paciente encontrado
     }
 
-    @PostMapping 
-    public ResponseEntity<PacienteDTO> guardar(@RequestBody PacienteDTO pacienteDTO) { // Método para guardar un paciente
+    @PostMapping
+    public ResponseEntity<PacienteDTO> guardar(@RequestBody PacienteDTO pacienteDTO) { 
         Paciente paciente = pacienteDTO.toEntity();
-        Paciente pacienteGuardado = pacienteService.guardar(paciente); 
-        return ResponseEntity.status(HttpStatus.CREATED).body(PacienteDTO.fromEntity(pacienteGuardado)); // Retorna el paciente guardado
+        Paciente pacienteGuardado = pacienteService.guardar(paciente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(PacienteDTO.fromEntity(pacienteGuardado)); 
     }
 
     @PutMapping("/editar/{id}")
-    public PacienteDTO editar(@PathVariable Long id, @RequestBody PacienteDTO pacienteDTO) {
-        Paciente paciente = pacienteDTO.toEntity(); 
+    public ResponseEntity<PacienteDTO> editar(@PathVariable Long id, @RequestBody PacienteDTO pacienteDTO) {
+        Paciente paciente = pacienteDTO.toEntity();
         Paciente pacienteEditado = pacienteService.editar(id, paciente);
-        return PacienteDTO.fromEntity(pacienteEditado); 
+        return ResponseEntity.ok(PacienteDTO.fromEntity(pacienteEditado));
     }
 
-    @DeleteMapping("/{id}") 
-    public void eliminarPorId(@PathVariable Long id) { // Método para eliminar un paciente por su ID
-        pacienteService.eliminarPorId(id); // Elimina el paciente por su ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarPorId(@PathVariable Long id) { // Método para eliminar un paciente por su ID
+        pacienteService.eliminarPorId(id);
+        return ResponseEntity.ok("Paciente eliminado correctamente");
+    }
+
+    @PostMapping("/persona-existe")
+    public ResponseEntity<?> personaExiste(@RequestBody PacienteDTO pacienteDTO) {
+        if (pacienteService.personaExiste(pacienteDTO.toEntity().getPersona())) {
+            return ResponseEntity.ok("La persona ya está registrada como paciente.");
+        }
+        return ResponseEntity.ok("La persona no está registrada como paciente.");
     }
 }

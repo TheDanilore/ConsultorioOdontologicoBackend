@@ -14,4 +14,7 @@ import org.springframework.stereotype.Repository;
 public interface PacienteRepository extends JpaRepository<Paciente, Long> {
     Optional<Paciente> findByPersona(Persona persona);
 
+    boolean existsByPersonaCorreoOrPersonaNumeroDocumentoOrPersonaTelefono(String correo, String numeroDocumento,
+            String telefono);
+
 }

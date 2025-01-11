@@ -13,6 +13,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Long> {
     // Métodos personalizados
+    // Busca una persona por su correo, número de documento o teléfono
+    Optional<Persona> findByCorreoOrNumeroDocumentoOrTelefono(String correo, String numeroDocumento, String telefono);
+
     Optional<Persona> findByCorreo(String correo); // Busca una persona por su correo
 
     Optional<Persona> findByTelefono(String telefono); // Busca una persona por su teléfono

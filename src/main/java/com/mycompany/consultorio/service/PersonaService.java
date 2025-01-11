@@ -22,6 +22,11 @@ public class PersonaService {
         return personaRepository.findAll(pageable);
     }
 
+    public Persona buscarPorId(Long id) {
+        return personaRepository.findById(id)
+                .orElseThrow(() -> new DAOException("La Persona con ID: " + id + " no existe"));
+    }
+
     public Persona guardar(Persona persona) {
         if (personaRepository.findByCorreo(persona.getCorreo()).isPresent()) {
             throw new DAOException("El correo ya está registrado.");
@@ -56,10 +61,7 @@ public class PersonaService {
         return personaRepository.save(personaExistente);
     }
 
-    public Persona buscarPorId(Long id) {
-        return personaRepository.findById(id)
-                .orElseThrow(() -> new DAOException("La Persona con ID: " + id + " no existe"));
-    }
+
 
     public void eliminarPorId(Long id) {
         personaRepository.deleteById(id);

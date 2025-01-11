@@ -13,7 +13,7 @@ public class Paciente { // Clase para la entidad Paciente
     private Long id; // Atributo para el ID del paciente
 
     @OneToOne(cascade = CascadeType.ALL) // Relación uno a uno con la entidad Persona
-    @JoinColumn(name = "persona_id", referencedColumnName = "id") // Columna de unión con la tabla persona
+    @JoinColumn(name = "persona_id", referencedColumnName = "id") 
     private Persona persona; // Atributo para la persona del paciente
 
     private LocalDateTime created_at;
