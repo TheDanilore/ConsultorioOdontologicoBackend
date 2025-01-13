@@ -1,5 +1,6 @@
 package com.mycompany.consultorio.dto.usuario;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,14 +13,19 @@ public class UsuarioDTO {
     private String email;
     private String password; // Incluye la contraseña encriptada
     private EstadoEnum estado;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
     private List<RolDTO> roles; // Cambiar a Set<RolDTO> si prefieres conjuntos
 
-    public UsuarioDTO(Long id, String nombre, String email, String password, EstadoEnum estado, List<RolDTO> roles) {
+    public UsuarioDTO(Long id, String nombre, String email, String password, EstadoEnum estado,
+            LocalDateTime created_at, LocalDateTime updated_at, List<RolDTO> roles) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
         this.password = password;
         this.estado = estado;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
         this.roles = roles;
     }
 
@@ -34,6 +40,8 @@ public class UsuarioDTO {
         dto.setEmail(usuario.getEmail());
         dto.setPassword(usuario.getPassword()); // Incluye la contraseña encriptada
         dto.setEstado(usuario.getEstado());
+        dto.setCreated_at(usuario.getCreated_at());
+        dto.setUpdated_at(usuario.getUpdated_at());
         dto.setRoles(usuario.getRoles().stream()
                 .map(RolDTO::fromEntity)
                 .collect(Collectors.toList()));
@@ -47,7 +55,8 @@ public class UsuarioDTO {
         usuario.setNombre(this.nombre);
         usuario.setPassword(this.password);
         usuario.setEmail(this.email);
-        usuario.setEstado(this.estado);
+        usuario.setCreated_at(this.created_at);
+        usuario.setUpdated_at(this.updated_at);
 
         usuario.setRoles(this.roles != null
                 ? this.roles.stream()
@@ -104,6 +113,22 @@ public class UsuarioDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }
 
 }

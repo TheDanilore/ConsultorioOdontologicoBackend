@@ -1,0 +1,59 @@
+name: consultorio-odontologico
+
+networks:
+  main-net:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
+
+services:
+  springboot:
+    image: openjdk:17-jdk
+    container_name: springboot-service
+    volumes:
+      - "./build/libs:/app" # JAR/WAR está en el directorio build/libs
+    working_dir: /app
+    command: [
+        "java",
+        "-jar",
+        "ConsultorioOdontologicoBackend-0.0.1-SNAPSHOT.jar",
+      ] # Cambia por el nombre exacto de tu JAR
+    ports:
+      - "8080:8080" # Cambia si usas otro puerto en tu aplicación Spring Boot
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/consultorio_odontologico_db?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root123
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db
+    networks:
+      - main-net
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-service
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: consultorio_odontologico_db
+      MYSQL_ROOT_PASSWORD: root123
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+      - "--default-authentication-plugin=mysql_native_password"
+    volumes:
+      - "data:/var/lib/mysql"
+    networks:
+      - main-net
+
+  mail:
+    image: mailhog/mailhog:v1.0.1
+    container_name: mailhog-service
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - main-net

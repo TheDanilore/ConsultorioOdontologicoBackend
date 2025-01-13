@@ -23,6 +23,8 @@ public class PacienteDTO {
     public static PacienteDTO fromEntity(Paciente paciente) {
         PacienteDTO dto = new PacienteDTO();
         dto.setId(paciente.getId());
+        dto.setCreated_at(paciente.getCreated_at());
+        dto.setUpdated_at(paciente.getUpdated_at());
         if(paciente.getPersona() != null){
             dto.setPersona(PersonaDTO.fromEntity(paciente.getPersona()));
         }
@@ -32,6 +34,8 @@ public class PacienteDTO {
     public Paciente toEntity() {
         Paciente paciente = new Paciente();
         paciente.setId(this.id);
+        paciente.setCreated_at(this.created_at);
+        paciente.setUpdated_at(this.updated_at);
         if(this.persona != null){
             paciente.setPersona(this.persona.toEntity());
         }

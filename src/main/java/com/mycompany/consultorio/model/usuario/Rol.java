@@ -1,6 +1,8 @@
 package com.mycompany.consultorio.model.usuario;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,6 +20,9 @@ public class Rol {
 
     @Enumerated(EnumType.STRING)
     private EstadoEnum estado = EstadoEnum.Activo;;
+    
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     @JsonIgnore // Ignora la serialización de esta relación
@@ -32,10 +37,15 @@ public class Rol {
     )
     private Set<Permiso> permisos  = new HashSet<>();
 
-    public Rol(int id, String descripcion, EstadoEnum estado, Set<Usuario> usuarios, Set<Permiso> permisos) {
+
+
+    public Rol(int id, String descripcion, EstadoEnum estado, LocalDateTime created_at, LocalDateTime updated_at,
+            Set<Usuario> usuarios, Set<Permiso> permisos) {
         this.id = id;
         this.descripcion = descripcion;
         this.estado = estado;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
         this.usuarios = usuarios;
         this.permisos = permisos;
     }
@@ -81,6 +91,22 @@ public class Rol {
 
     public void setPermisos(Set<Permiso> permisos) {
         this.permisos = permisos;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.created_at = created_at;
+    }
+
+    public LocalDateTime getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updated_at = updated_at;
     }    
     
 }

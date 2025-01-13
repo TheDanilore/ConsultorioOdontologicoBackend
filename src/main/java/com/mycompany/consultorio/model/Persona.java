@@ -48,7 +48,6 @@ public class Persona {
     private String lugarNacimiento;
 
     private LocalDateTime created_at;
-
     private LocalDateTime updated_at;
 
     public Persona(Long id, String nombres, String apellidos, String direccion, String telefono,
@@ -203,8 +202,5 @@ public class Persona {
     public void setUpdated_at(LocalDateTime updated_at) {
         this.updated_at = updated_at;
     }
-
-    
-    
 
 }
